@@ -1,6 +1,7 @@
-import { Button, TextField } from "@material-ui/core";
-import { useEffect, useState } from "react";
-import { IStats } from "./interfaces/IStats";
+import { AppBar, Button, TextField, Toolbar, Typography } from '@material-ui/core';
+import { useEffect, useState } from 'react';
+import { TileList } from './components/tileList';
+import { IStats } from './interfaces/IStats';
 
 const defaultStats: IStats[] = [];
 const App = () => {
@@ -11,31 +12,50 @@ const App = () => {
 
   const handleChange = (input: any) => {
     const inputVal = input.target.value;
-    setValue(inputVal)
-    console.log(value)
-  }
+    setValue(inputVal);
+  };
 
   async function getStats() {
     let res = await fetch('/data-set/1234');
     res = await res.json();
-    setStats(res)
+    setStats(res);
     setLoading(false);
   }
+
   useEffect(() => {
     try {
       getStats();
-      console.log(stats)
     } catch (e) {
-      const errMsg = e === 404 || stats.length < 1 ? "Resource not found" : "Something else went terribly wrong :(";
-      setErr(errMsg)
+      const errMsg =
+        e === 404 || stats.length < 1
+          ? 'Resource not found'
+          : 'Something else went terribly wrong :(';
+      setErr(errMsg);
     }
-
-  }, ([]))
+  }, []);
 
   return (
     <div>
-      <TextField id="outlined-basic" label="Outlined" variant="outlined" onChange={handleChange} />
-      <Button variant="contained">Default</Button>
+      <AppBar>
+        <Toolbar>
+          <Typography variant="h6">Tandem Challenge</Typography>
+        </Toolbar>
+      </AppBar>
+      <div style={{ padding: '20px', paddingTop: '50px' }}>
+        <h3>Stats</h3>
+        <TileList vals={stats} />
+      </div>
+      <div style={{ paddingLeft: '20px' }}>
+        <TextField
+          id="outlined-basic"
+          variant="outlined"
+          placeholder="Enter a number to post"
+          onChange={handleChange}
+        />
+        <Button variant="contained" style={{ marginLeft: '15px' }}>
+          Submit
+        </Button>
+      </div>
     </div>
   );
 };

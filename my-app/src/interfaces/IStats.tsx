@@ -1,4 +1,4 @@
-export interface IStats{
-    id?: number, 
-    values?: []
+export interface IStats {
+  id?: number;
+  values?: [];
 }
