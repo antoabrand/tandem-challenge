@@ -1,5 +1,5 @@
-import { AppBar, Button, TextField, Toolbar, Typography } from '@material-ui/core';
-import { useEffect, useState } from 'react';
+import { AppBar, Button, LinearProgress, TextField, Toolbar, Typography } from '@material-ui/core';
+import React, { useEffect, useState } from 'react';
 import { TileList } from './components/tileList';
 import { IStats } from './interfaces/IStats';
 
@@ -56,6 +56,9 @@ const App = () => {
           Submit
         </Button>
       </div>
+      {loading ? (
+        <LinearProgress style={{ bottom: 'auto' }} variant="indeterminate" color="secondary" />
+      ) : null}
     </div>
   );
 };

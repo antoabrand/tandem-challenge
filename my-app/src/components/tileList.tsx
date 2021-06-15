@@ -5,6 +5,7 @@ import { getMean } from '../utils/getMean';
 
 export function TileList(props: any) {
   const { vals } = props;
+
   let average = 0;
   let mean = 0;
   let mode = 0;
