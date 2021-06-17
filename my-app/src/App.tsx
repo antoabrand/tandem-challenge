@@ -1,5 +1,5 @@
-import { AppBar, LinearProgress, Toolbar, Typography } from '@material-ui/core';
-import { FormEvent, useEffect, useState } from 'react';
+import { AppBar, Button, LinearProgress, TextField, Toolbar, Typography } from '@material-ui/core';
+import React, { FormEvent, useEffect, useState } from 'react';
 import { TileList } from './components/tileList';
 import { IStats } from './interfaces/IStats';
 
@@ -19,29 +19,33 @@ const App = () => {
 
   async function getStats() {
     let res = await fetch('/data-set/1234');
-    res = await res.json();
-    setStats(res);
+    if(res.status === 200){
+      res = await res.json();
+      setStats(res);
+    } else {
+      setErr(JSON.stringify(res.status))
+    }
     setLoading(false);
   }
 
   async function submit(event: FormEvent) {
-    event.preventDefault();
-    const postRes = await fetch('/data-set/1234', {
+    event.preventDefault(); // dont force a rerender immediately
+    setLoading(true);
+    await fetch('/data-set/1234', {
       method: 'POST',
       body: JSON.stringify({ value: Number(value) }),
     });
-    const result = await postRes.json();
     setValue(''); //reset val back to null essentially to clear out val and give user some feedback
-    setSubmitted(!submitted); //trigger a rerender and useffect to force a get for new data after the post
+    setSubmitted(!submitted); // watching this value in useeffect to trigger a render on submit - fetching the new data
+    setLoading(false);
   }
 
   useEffect(() => {
     try {
       getStats();
-    } catch (e) {
-      const errMsg =
-        e.status === 404 ? 'Resource not found' : 'Something else went terribly wrong :(';
-      setErr(errMsg);
+    } catch (error) {
+      setErr(error);
+      console.log(error);
     }
   }, [submitted]);
 
@@ -58,11 +62,15 @@ const App = () => {
       </div>
       <div style={{ paddingLeft: '20px' }}>
         <form onSubmit={(e) => submit(e)}>
-          <label>
-            Number To Post:
-            <input type="text" value={value} onChange={handleChange} />
-          </label>
-          <input type="submit" value="Submit" />
+          <TextField
+            helperText="Add a number to the data set"
+            type="text"
+            value={value}
+            onChange={handleChange}
+          />
+          <Button type="submit" value="Submit" variant="outlined">
+            Submit
+          </Button>
         </form>
       </div>
       {loading ? (
