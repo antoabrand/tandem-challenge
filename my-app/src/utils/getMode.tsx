@@ -19,7 +19,7 @@ export function getMode(vals: number[]) {
   for (let key in frequency) {
     value = frequency[key];
 
-    if (highestVal < value) {
+    if (value > highestVal) {
       highestVal = value;
       highestValKey = Number(key);
     }
