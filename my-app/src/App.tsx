@@ -18,7 +18,7 @@ const App = () => {
   };
 
   async function getStats() {
-    let res = await fetch('/data-set/4321');
+    let res = await fetch('/data-set/1234');
     if (res.status === 200) {
       res = await res.json();
       setStats(res);
