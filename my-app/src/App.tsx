@@ -8,7 +8,7 @@ const App = () => {
   const [value, setValue]: [string, (value: string) => void] = useState('');
   const [stats, setStats]: [IStats[], (stats: any) => void] = useState(defaultStats);
   const [loading, setLoading]: [boolean, (loading: boolean) => void] = useState<boolean>(true);
-  const [, setErr]: [string, (err: string) => void] = useState('');
+  const [err, setErr]: [string, (err: string) => void] = useState('');
   const [submitted, setSubmitted]: [boolean, (sumbitted: boolean) => void] =
     useState<boolean>(false);
 
@@ -18,12 +18,14 @@ const App = () => {
   };
 
   async function getStats() {
-    let res = await fetch('/data-set/1234');
-    if(res.status === 200){
+    let res = await fetch('/data-set/4321');
+    if (res.status === 200) {
       res = await res.json();
       setStats(res);
     } else {
-      setErr(JSON.stringify(res.status))
+      const error =
+        res.status === 404 ? 'Data unable to load' : 'Something went wrong, try again later.';
+      setErr(error);
     }
     setLoading(false);
   }
@@ -56,11 +58,12 @@ const App = () => {
           <Typography variant="h6">Tandem Challenge</Typography>
         </Toolbar>
       </AppBar>
-      <div style={{ padding: '20px', paddingTop: '50px' }}>
+      <div className="tiles">
         <h3>Stats</h3>
         <TileList vals={stats} />
       </div>
-      <div style={{ paddingLeft: '20px' }}>
+      {err ? <Typography color="error">{err}</Typography> : null}
+      <div className="form">
         <form onSubmit={(e) => submit(e)}>
           <TextField
             helperText="Add a number to the data set"
@@ -74,7 +77,7 @@ const App = () => {
         </form>
       </div>
       {loading ? (
-        <LinearProgress style={{ bottom: 'auto' }} variant="indeterminate" color="secondary" />
+        <LinearProgress className="progressbar" variant="indeterminate" color="secondary" />
       ) : null}
     </div>
   );
